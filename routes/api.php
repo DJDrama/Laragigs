@@ -14,6 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// ex) http://laragigs.test/api/postsTest : Need 'api' in url
+Route::get('/postsTest', function(){
+    return response()->json([
+       'posts' => [
+           [
+               'title' => 'Post 1'
+           ]
+       ]
+    ]);
+});
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });

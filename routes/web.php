@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ListingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Listing;
@@ -38,18 +39,20 @@ Route::get('/search', function (Request $request) {
 });
 
 
+/** Common Resource Routes */
+// index - Show all items
+// show - Show single item
+// create - Show form to create new item
+// store - Store new item
+// edit - Show form to edit item
+// update - Update item
+// destroy - Delete item
+
+
 // NEW
 // get all Listings
-Route::get('/', function () {
-    return view('listings', [
-        'heading' => 'Latest Listings',
-        'listings' => Listing::all() // :: static method
-    ]); // listings.blade.php
-});
+Route::get('/', [ListingController::class, 'index']);
 
 // get single listings
-Route::get('/listings/{id}', function($id){
-    return view('listing', [
-        'listing' => Listing::find($id)
-    ]);
-});
+Route::get('/listings/{listing}', [ListingController::class, 'show']);
+

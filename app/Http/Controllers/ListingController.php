@@ -42,8 +42,11 @@ class ListingController extends Controller
             'tags' => 'required',
             'description' => 'required'
         ]);
-        Listing::create($formFields);
 
+        if($request->hasFile('logo')){
+            $formFields['logo'] = $request->file('logo')->store('logos', 'public'); // store('logos') : logos folder
+        } // php artisan storage:link -> we can access by http://laragigs.test/storage/logos/Z5F4LfTILQKHBHbfoQY8Fp2Y74ZW8u4Rf3fE3oSF.png
+        Listing::create($formFields);
         // Session::flash('message', 'Listing Created!');
         return redirect('/')->with('message', 'Listing Created!');
     }

@@ -50,4 +50,29 @@ class ListingController extends Controller
         // Session::flash('message', 'Listing Created!');
         return redirect('/')->with('message', 'Listing Created!');
     }
+
+    // Edit Listing
+    public function edit(Listing $listing){
+        return view('listings.edit', ['listing' => $listing]);
+    }
+
+    // Update Listing
+    public function update(Request $request, Listing $listing){
+        $formFields = $request->validate([
+            'title' => 'required',
+            'company' => 'required', // removed uniqueness since it's being updated.
+            'location' => 'required',
+            'website' => 'required',
+            'email' => ['required', 'email'],
+            'tags' => 'required',
+            'description' => 'required'
+        ]);
+
+        if($request->hasFile('logo')){
+            $formFields['logo'] = $request->file('logo')->store('logos', 'public'); // store('logos') : logos folder
+        }
+        $listing->update($formFields);
+
+        return back()->with('message', 'Listing Updated!');
+    }
 }

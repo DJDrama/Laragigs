@@ -27,12 +27,14 @@ class ListingController extends Controller
     }
 
     // Show Create Form
-    public function create(){
+    public function create()
+    {
         return view('listings.create');
     }
 
     // Store Listing
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $formFields = $request->validate([
             'title' => 'required',
             'company' => ['required', Rule::unique('listings', 'company')],
@@ -43,7 +45,7 @@ class ListingController extends Controller
             'description' => 'required'
         ]);
 
-        if($request->hasFile('logo')){
+        if ($request->hasFile('logo')) {
             $formFields['logo'] = $request->file('logo')->store('logos', 'public'); // store('logos') : logos folder
         } // php artisan storage:link -> we can access by http://laragigs.test/storage/logos/Z5F4LfTILQKHBHbfoQY8Fp2Y74ZW8u4Rf3fE3oSF.png
         Listing::create($formFields);
@@ -52,12 +54,14 @@ class ListingController extends Controller
     }
 
     // Edit Listing
-    public function edit(Listing $listing){
+    public function edit(Listing $listing)
+    {
         return view('listings.edit', ['listing' => $listing]);
     }
 
     // Update Listing
-    public function update(Request $request, Listing $listing){
+    public function update(Request $request, Listing $listing)
+    {
         $formFields = $request->validate([
             'title' => 'required',
             'company' => 'required', // removed uniqueness since it's being updated.
@@ -68,11 +72,18 @@ class ListingController extends Controller
             'description' => 'required'
         ]);
 
-        if($request->hasFile('logo')){
+        if ($request->hasFile('logo')) {
             $formFields['logo'] = $request->file('logo')->store('logos', 'public'); // store('logos') : logos folder
         }
         $listing->update($formFields);
 
         return back()->with('message', 'Listing Updated!');
+    }
+
+    // Delete Listing
+    public function destroy(Listing $listing)
+    {
+        $listing->delete();
+        return redirect('/')->with('message', 'Listing Deleted!');
     }
 }

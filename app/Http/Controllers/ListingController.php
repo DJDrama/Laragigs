@@ -48,6 +48,9 @@ class ListingController extends Controller
         if ($request->hasFile('logo')) {
             $formFields['logo'] = $request->file('logo')->store('logos', 'public'); // store('logos') : logos folder
         } // php artisan storage:link -> we can access by http://laragigs.test/storage/logos/Z5F4LfTILQKHBHbfoQY8Fp2Y74ZW8u4Rf3fE3oSF.png
+
+        $formFields['user_id'] = auth()->id();
+
         Listing::create($formFields);
         // Session::flash('message', 'Listing Created!');
         return redirect('/')->with('message', 'Listing Created!');
@@ -62,6 +65,10 @@ class ListingController extends Controller
     // Update Listing
     public function update(Request $request, Listing $listing)
     {
+        // make sure logged in user is owner
+        if($listing->user_id != auth()->id()) {
+            abort(403, 'Unauthorized Action!');
+        }
         $formFields = $request->validate([
             'title' => 'required',
             'company' => 'required', // removed uniqueness since it's being updated.
@@ -83,7 +90,16 @@ class ListingController extends Controller
     // Delete Listing
     public function destroy(Listing $listing)
     {
+        // make sure logged in user is owner
+        if($listing->user_id != auth()->id()) {
+            abort(403, 'Unauthorized Action!');
+        }
         $listing->delete();
         return redirect('/')->with('message', 'Listing Deleted!');
+    }
+
+    // Manage My Listings
+    public function manage(){
+        return view('listings.manage', ['listings' => auth()->user()->listings()->get()]);
     }
 }

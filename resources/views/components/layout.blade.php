@@ -33,7 +33,8 @@
     ><img class="w-24" src="{{asset('images/logo.png')}}" alt="" class="logo"
         /></a>
     <ul class="flex space-x-6 mr-6 text-lg">
-        @auth <!-- automatically manages log in session -->
+        @auth
+            <!-- automatically manages log in session -->
             <li>
                <span class="font-bold uppercase">
                    Welcome {{auth()->user()->name}}
@@ -44,6 +45,16 @@
                 ><i class="fa-solid fa-gear"></i>
                     Manage Listings</a
                 >
+            </li>
+            <li>
+                <form class="inline" method="POST" action="/logout">
+                    @csrf
+                    <button type="submit">
+                        <i class="fa-solid fa-door-closed">
+                        </i>
+                        Log Out
+                    </button>
+                </form>
             </li>
         @else
             <li>

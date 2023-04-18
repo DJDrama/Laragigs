@@ -55,34 +55,39 @@ Route::get('/search', function (Request $request) {
 Route::get('/', [ListingController::class, 'index']);
 
 // Show create form
-Route::get('/listings/create', [ListingController::class, 'create']);
+Route::get('/listings/create', [ListingController::class, 'create'])->middleware('auth'); // if not signed in, will go to login page
 
 // Store Listing Data
-Route::post('/listings', [ListingController::class, 'store']);
+Route::post('/listings', [ListingController::class, 'store'])->middleware('auth'); // if not signed in, will go to login page;
 
 // Show Edit Form
-Route::get("/listings/{listing}/edit", [ListingController::class, 'edit']);
+Route::get("/listings/{listing}/edit", [ListingController::class, 'edit'])->middleware('auth'); // if not signed in, will go to login page;
 
 // Edit Submit to Update
-Route::put("listings/{listing}", [ListingController::class, 'update']);
+Route::put("listings/{listing}", [ListingController::class, 'update'])->middleware('auth'); // if not signed in, will go to login page;
 
 // Delete
-Route::delete("listings/{listing}", [ListingController::class, 'destroy']);
+Route::delete("listings/{listing}", [ListingController::class, 'destroy'])->middleware('auth'); // if not signed in, will go to login page;
+
+// Manage Listings
+Route::get("/listings/manage", [ListingController::class, 'manage'])->middleware('auth');
 
 // get single listings
 Route::get('/listings/{listing}', [ListingController::class, 'show']);
 
 // Show Register Create Form
-Route::get('/register', [UserController::class, 'create']);
+Route::get('/register', [UserController::class, 'create'])->middleware('guest'); // only guest can register
 
 // Create New User
 Route::post('/users', [UserController::class, 'store']);
 
 // Log User Out
-Route::post('/logout', [UserController::class, 'logout']);
+Route::post('/logout', [UserController::class, 'logout'])->middleware('auth'); // if not signed in, will go to login page;
 
 // Show Login Form
-Route::get('/login', [UserController::class, 'login']);
+Route::get('/login', [UserController::class, 'login'])->name('login')->middleware('guest'); // Authenticate.php same name 'login'
 
 // Log in User
 Route::post('/users/authenticate', [UserController::class, 'authenticate']);
+
+
